@@ -31,8 +31,19 @@ func PostNewUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 // PutUser
 func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	//vars := mux.Vars(r)
+	user := &User{}
+
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&user); err != nil {
+		respondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	defer r.Body.Close()
+
+	respondJSON(w, http.StatusNotImplemented, user)
+
 	//respondJSON(w, http.StatusOK, nil)
-	respondError(w, 501, "not implemented.")
+	//respondError(w, 501, "not implemented.")
 }
 
 // GetAllMessages
