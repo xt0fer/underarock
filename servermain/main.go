@@ -2,7 +2,7 @@ package main
 
 //
 import (
-	"github.com/kristofer/underarock"
+	"github.com/vvmk/underarock"
 )
 
 func main() {

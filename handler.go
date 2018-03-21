@@ -30,7 +30,6 @@ func PostNewUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 
 // PutUser
 func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
-	//vars := mux.Vars(r)
 	user := &User{}
 
 	decoder := json.NewDecoder(r.Body)
@@ -40,10 +39,21 @@ func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	}
 	defer r.Body.Close()
 
-	respondJSON(w, http.StatusNotImplemented, user)
+	myid := user.UserId
+	oldUser, err := db.FetchUser(myid)
+	if err != nil {
+		respondError(w, http.StatusNotFound, err.Error())
+	}
 
-	//respondJSON(w, http.StatusOK, nil)
-	//respondError(w, 501, "not implemented.")
+	if err = db.Delete("user", oldUser.UserId); err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+	}
+	err = db.Write("user", user.UserId, user)
+	if nErr != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+	}
+
+	respondJSON(w, http.StatusNotImplemented, "change")
 }
 
 // GetAllMessages
