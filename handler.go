@@ -46,7 +46,7 @@ func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	}
 
 	err = db.Write("user", oldUser.UserId, user)
-	if nErr != nil {
+	if err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 	}
 
