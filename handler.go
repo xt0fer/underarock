@@ -45,10 +45,7 @@ func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 		respondError(w, http.StatusNotFound, err.Error())
 	}
 
-	if err = db.Delete("user", oldUser.UserId); err != nil {
-		respondError(w, http.StatusInternalServerError, err.Error())
-	}
-	err = db.Write("user", user.UserId, user)
+	err = db.Write("user", oldUser.UserId, user)
 	if nErr != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
 	}
