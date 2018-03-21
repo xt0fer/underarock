@@ -2,7 +2,6 @@ package underarock
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -36,7 +35,7 @@ func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&user); err != nil {
 		respondError(w, http.StatusBadRequest, err.Error())
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 		return
 	}
 	defer r.Body.Close()
@@ -45,13 +44,13 @@ func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	oldUser, err := db.FetchUser(myid)
 	if err != nil {
 		respondError(w, http.StatusNotFound, err.Error())
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 	}
 
 	err = db.Write("user", oldUser.UserId, user)
 	if err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
-		fmt.Println(err.Error())
+		log.Println(err.Error())
 	}
 
 	respondJSON(w, http.StatusNotImplemented, "change")
