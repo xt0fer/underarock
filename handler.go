@@ -28,6 +28,15 @@ func PostNewUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, newuser)
 }
 
+// GetUserId returns the first entry found with the supplied githubid.
+func GetUserId(db *Driver, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	myid := vars["myid"]
+
+	userId, _ := db.GetUserByGithub(myid)
+	respondJSON(w, http.StatusOK, userId)
+}
+
 // PutUser
 func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	user := &User{}
@@ -35,25 +44,16 @@ func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	decoder := json.NewDecoder(r.Body)
 	if err := decoder.Decode(&user); err != nil {
 		respondError(w, http.StatusBadRequest, err.Error())
-		log.Println(err.Error())
 		return
 	}
 	defer r.Body.Close()
 
-	myid := user.UserId
-	oldUser, err := db.FetchUser(myid)
-	if err != nil {
-		respondError(w, http.StatusNotFound, err.Error())
-		log.Println(err.Error())
-	}
-
-	err = db.Write("user", oldUser.UserId, user)
-	if err != nil {
+	if err := db.Write("user", user.UserId, user); err != nil {
 		respondError(w, http.StatusInternalServerError, err.Error())
-		log.Println(err.Error())
+		return
 	}
 
-	respondJSON(w, http.StatusNotImplemented, "change")
+	respondJSON(w, http.StatusOK, user)
 }
 
 // GetAllMessages

@@ -2,7 +2,7 @@ package main
 
 //
 import (
-	"github.com/vvmk/underarock"
+	"../../underarock"
 )
 
 func main() {
