@@ -4,6 +4,7 @@ import (
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -68,6 +69,8 @@ func (a *App) setRouters() {
 	a.Post("/ids", a.PostNewUser)
 	a.Put("/ids", a.PutUser)
 
+	a.Get("/ids/{myid}", a.GetUserId)
+
 	// #### /messages/
 	// * `GET` : Get last 20 msgs - returns an JSON array of message objects
 	a.Get("/messages", a.GetAllMessages)
@@ -113,6 +116,27 @@ func (db *Driver) FetchUser(id string) (*User, error) {
 	}
 	return &onefish, nil
 }
+
+// GetUserByGithub returns the first User found with the given GithubId
+func (db *Driver) GetUserByGithub(id string) (string, error) {
+	records, err := db.ReadAll("user")
+	if err != nil {
+		return "", err
+	}
+
+	for _, f := range records {
+		fishFound := User{}
+		if err := json.Unmarshal([]byte(f), &fishFound); err != nil {
+			return "", err
+		}
+
+		if fishFound.Github == id {
+			return fishFound.UserId, nil
+		}
+	}
+	return "", errors.New("GithubID not found")
+}
+
 func (db *Driver) AllUsers() (*[]User, error) {
 	records, err := db.ReadAll("user")
 	if err != nil {
@@ -215,6 +239,11 @@ func (a *App) PostNewUser(w http.ResponseWriter, r *http.Request) {
 
 func (a *App) PutUser(w http.ResponseWriter, r *http.Request) {
 	PutUser(a.DB, w, r)
+}
+
+// GetUserByGithub
+func (a *App) GetUserId(w http.ResponseWriter, r *http.Request) {
+	GetUserId(a.DB, w, r)
 }
 
 // GetAllMessages

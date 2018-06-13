@@ -28,11 +28,32 @@ func PostNewUser(db *Driver, w http.ResponseWriter, r *http.Request) {
 	respondJSON(w, http.StatusOK, newuser)
 }
 
+// GetUserId returns the first entry found with the supplied githubid.
+func GetUserId(db *Driver, w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	myid := vars["myid"]
+
+	userId, _ := db.GetUserByGithub(myid)
+	respondJSON(w, http.StatusOK, userId)
+}
+
 // PutUser
 func PutUser(db *Driver, w http.ResponseWriter, r *http.Request) {
-	//vars := mux.Vars(r)
-	//respondJSON(w, http.StatusOK, nil)
-	respondError(w, 501, "not implemented.")
+	user := &User{}
+
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&user); err != nil {
+		respondError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+	defer r.Body.Close()
+
+	if err := db.Write("user", user.UserId, user); err != nil {
+		respondError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondJSON(w, http.StatusOK, user)
 }
 
 // GetAllMessages
