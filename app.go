@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -273,5 +274,7 @@ func (a *App) GetFriendMessages(w http.ResponseWriter, r *http.Request) {
 
 // Run the app on its router
 func (a *App) Run(host string) {
-	log.Fatal(http.ListenAndServe(host, a.Router))
+	corsObj := handlers.AllowedOrigins([]string{"*"})
+
+	log.Fatal(http.ListenAndServe(host, handlers.CORS(corsObj)(a.Router)))
 }
