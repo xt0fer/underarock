@@ -274,6 +274,7 @@ func (a *App) GetFriendMessages(w http.ResponseWriter, r *http.Request) {
 
 // Run the app on its router
 func (a *App) Run(host string) {
+	// open up for CORS
 	corsObj := handlers.AllowedOrigins([]string{"*"})
 
 	log.Fatal(http.ListenAndServe(host, handlers.CORS(corsObj)(a.Router)))
