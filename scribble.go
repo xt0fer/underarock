@@ -1,4 +1,4 @@
-// Package scribble is a tiny JSON database
+// Package underarock uses scribble is a tiny JSON database
 package underarock
 
 // used for under a rock
@@ -87,12 +87,12 @@ func (d *Driver) Write(collection, resource string, v interface{}) error {
 
 	// ensure there is a place to save record
 	if collection == "" {
-		return fmt.Errorf("Missing collection - no place to save record!")
+		return fmt.Errorf("Missing collection - no place to save record")
 	}
 
 	// ensure there is a resource (name) to save record as
 	if resource == "" {
-		return fmt.Errorf("Missing resource - unable to save record (no name)!")
+		return fmt.Errorf("Missing resource - unable to save record (no name)")
 	}
 
 	mutex := d.getOrCreateMutex(collection)
@@ -129,12 +129,12 @@ func (d *Driver) Read(collection, resource string, v interface{}) error {
 
 	// ensure there is a place to save record
 	if collection == "" {
-		return fmt.Errorf("Missing collection - no place to save record!")
+		return fmt.Errorf("Missing collection - no place to save record")
 	}
 
 	// ensure there is a resource (name) to save record as
 	if resource == "" {
-		return fmt.Errorf("Missing resource - unable to save record (no name)!")
+		return fmt.Errorf("Missing resource - unable to save record (no name)")
 	}
 
 	//
@@ -161,7 +161,7 @@ func (d *Driver) ReadAll(collection string) ([]string, error) {
 
 	// ensure there is a collection to read
 	if collection == "" {
-		return nil, fmt.Errorf("Missing collection - unable to record location!")
+		return nil, fmt.Errorf("Missing collection - unable to record location")
 	}
 
 	//
@@ -211,7 +211,7 @@ func (d *Driver) Delete(collection, resource string) error {
 
 	// if fi is nil or error is not nil return
 	case fi == nil, err != nil:
-		return fmt.Errorf("Unable to find file or directory named %v\n", path)
+		return fmt.Errorf("Unable to find file or directory named %v", path)
 
 	// remove directory and all contents
 	case fi.Mode().IsDir():

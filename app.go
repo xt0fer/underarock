@@ -22,7 +22,7 @@ type App struct {
 }
 
 type User struct {
-	UserId string `json:"userid"`
+	UserID string `json:"userid"`
 	Name   string `json:"name"`
 	Github string `json:"github"`
 }
@@ -30,8 +30,8 @@ type User struct {
 type Message struct {
 	Sequence  string    `json:"sequence"`
 	Timestamp time.Time `json:"timestamp"`
-	FromId    string    `json:"fromid"`
-	ToId      string    `json:"toid"`
+	FromID    string    `json:"fromid"`
+	ToID      string    `json:"toid"`
 	Message   string    `json:"message"`
 }
 
@@ -98,16 +98,16 @@ func makeUserHash(foo *User) string {
 	s := foo.Name + foo.Github
 	h := sha1.New()
 	h.Write([]byte(s))
-	sha1_hash := hex.EncodeToString(h.Sum(nil))
-	return sha1_hash
+	sha1Hash := hex.EncodeToString(h.Sum(nil))
+	return sha1Hash
 }
 
 func makeMessageHash(foo *Message) string {
-	s := foo.FromId + foo.ToId + foo.Message + foo.Timestamp.String()
+	s := foo.FromID + foo.ToID + foo.Message + foo.Timestamp.String()
 	h := sha1.New()
 	h.Write([]byte(s))
-	sha1_hash := hex.EncodeToString(h.Sum(nil))
-	return sha1_hash
+	sha1Hash := hex.EncodeToString(h.Sum(nil))
+	return sha1Hash
 }
 
 func (db *Driver) FetchUser(id string) (*User, error) {
@@ -132,7 +132,7 @@ func (db *Driver) GetUserByGithub(id string) (string, error) {
 		}
 
 		if fishFound.Github == id {
-			return fishFound.UserId, nil
+			return fishFound.UserID, nil
 		}
 	}
 	return "", errors.New("GithubID not found")
@@ -156,8 +156,8 @@ func (db *Driver) AllUsers() (*[]User, error) {
 	return &fishies, nil
 }
 func (db *Driver) NewUser(onefish *User) (*User, error) {
-	onefish.UserId = makeUserHash(onefish)
-	if err := db.Write("user", onefish.UserId, onefish); err != nil {
+	onefish.UserID = makeUserHash(onefish)
+	if err := db.Write("user", onefish.UserID, onefish); err != nil {
 		fmt.Println("Error", err)
 	}
 	return onefish, nil
@@ -244,7 +244,7 @@ func (a *App) PutUser(w http.ResponseWriter, r *http.Request) {
 
 // GetUserByGithub
 func (a *App) GetUserId(w http.ResponseWriter, r *http.Request) {
-	GetUserId(a.DB, w, r)
+	GetUserID(a.DB, w, r)
 }
 
 // GetAllMessages

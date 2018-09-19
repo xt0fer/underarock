@@ -96,7 +96,7 @@ func Top20For(id string) []Message {
 		original, ok := elem.Value.(*Message)
 		if ok {
 		}
-		if original.ToId == id {
+		if original.ToID == id {
 			top20 = append(top20, *original)
 		}
 	}
@@ -111,10 +111,10 @@ func Top20From(myid string, fid string) []Message {
 		original, ok := elem.Value.(*Message)
 		if ok {
 		}
-		if original.ToId == myid && original.FromId == fid {
+		if original.ToID == myid && original.FromID == fid {
 			top20 = append(top20, *original)
 		}
-		if original.ToId == fid && original.FromId == myid {
+		if original.ToID == fid && original.FromID == myid {
 			top20 = append(top20, *original)
 		}
 	}
